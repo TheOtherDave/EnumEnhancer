@@ -43,7 +43,7 @@ extension EnumeratesLabels {
         guard !(self is CustomStringConvertible) else {
             return Self.enhancer.__CustomStringConvertibleErrorMessage__
         }
-        return "\(self)".componentsSeparatedByString("(").first ?? "<Error! Unknown error getting label>"
+        return "\(self)".components(separatedBy: "(").first ?? "<Error! Unknown error getting label>"
     }
 }
 
@@ -59,11 +59,11 @@ public protocol EnumeratesCasesAndLabels : EnumeratesCases, EnumeratesLabels {}
 //    typealias EnhancedType: EnhancedEnum
 //    init(path: String, line: Int, column: Int, caseMaker: ()->AnyGenerator<EnhancedType>)
 //}
-public class EnumEnhancer <T: EnhancedEnum> {
-    public var __CustomStringConvertibleErrorMessage__: String { return "<Error! Cannot automatically extract labels when self is CustomStringConvertible>" }
+open class EnumEnhancer <T: EnhancedEnum> {
+    open var __CustomStringConvertibleErrorMessage__: String { return "<Error! Cannot automatically extract labels when self is CustomStringConvertible>" }
     public typealias EnhancedType = T
-    public let cases:    [T]
-    public private (set) lazy var labels: [String] = { return self.cases.map { $0.label } }()
+    open let cases:    [T]
+    open fileprivate (set) lazy var labels: [String] = { return self.cases.map { $0.label } }()
     internal init(_cases: [T]) {
         self.cases = _cases
     }
@@ -71,27 +71,27 @@ public class EnumEnhancer <T: EnhancedEnum> {
         self.cases  = _both.map { $0.0 }
         self.labels = _both.map { $0.1 }
     }
-    public convenience init <S: SequenceType where S.Generator.Element == T> (cases: S) {
+    public convenience init <S: Sequence> (cases: S) where S.Iterator.Element == T {
         self.init(_cases: Array(cases))
     }
-    public convenience init <S: SequenceType where S.Generator.Element == (T, String)> (both: S) {
+    public convenience init <S: Sequence> (both: S) where S.Iterator.Element == (T, String) {
         self.init(_both: Array(both))
     }
-    public convenience init <S1: SequenceType, S2: SequenceType where S1.Generator.Element == T, S2.Generator.Element == String> (cases: S1, labels: S2) {
+    public convenience init <S1: Sequence, S2: Sequence> (cases: S1, labels: S2) where S1.Iterator.Element == T, S2.Iterator.Element == String {
         self.init(both: Array(zip(cases, labels)))
     }
 }
 extension EnumEnhancer {
     // If T: CustomStringConvertible, we have to parse the source code
-    public convenience init(path:String = __FILE__, line:Int = __LINE__, column: Int = __COLUMN__, caseMaker: ()->AnyGenerator<T>) {
+    public convenience init(path:String = #file, line:Int = #line, column: Int = #column, caseMaker: ()->AnyIterator<T>) {
         self.init(both: zip(Array(caseMaker()), labelMaker(path: path, line: line, column: column, skipClosures: true)))
     }
 }
 
-public class EnhancedGenerator<T: EnhancedEnum> : EnumEnhancer<T> {
+open class EnhancedGenerator<T: EnhancedEnum> : EnumEnhancer<T> {
     public typealias Element = T
     /// Usage: Do NOT pass in anything other than next: (inout T?)->Void. The rest of the parameters all have default values that shouldn't be messed with... Unless you're being clever, of course. Then have at it, and please tell me about your cool idea!
-    public init(path:String = __FILE__, line:Int = __LINE__, column: Int = __COLUMN__, next: (inout T?)->Void) {
+    public init(path:String = #file, line:Int = #line, column: Int = #column, next: (inout T?)->Void) {
         var element: T? = nil
         let lLabels = labelMaker(path: path, line: line, column: column, skipClosures: true)
         var lCases = [T]()
@@ -105,21 +105,21 @@ public class EnhancedGenerator<T: EnhancedEnum> : EnumEnhancer<T> {
 }
 
 /// This is where all the actual parsing gets done. I have *very* little experience writing parsers, so... yeah... I *think* it works.
-internal func labelMaker(path path: String, line originalLine: Int, column: Int, skipClosures: Bool) -> [String] {
+internal func labelMaker(path: String, line originalLine: Int, column: Int, skipClosures: Bool) -> [String] {
     var line = originalLine
-    let lineTextArr = (try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) as String)?.componentsSeparatedByString("\n") ?? []
+    let lineTextArr = (try? NSString(contentsOfFile: path, encoding: String.Encoding.utf8.rawValue) as String)?.components(separatedBy: "\n") ?? []
     var caseDeclStartLine:Int = 0
     var caseDeclEndLine:Int = 0
     var foundStartOfCaseDecl = false
     
-    func checkLine(line:String) -> Bool {
-        let ans = !(line == "" || line.rangeOfString("//")?.startIndex == line.startIndex)
+    func checkLine(_ line:String) -> Bool {
+        let ans = !(line == "" || line.range(of: "//")?.lowerBound == line.startIndex)
         return ans
     }
     if skipClosures {
         var closureCount = 0
         closureLoop: for lineNum in ((line - 1 < 0) ? line : line - 1) ..< lineTextArr.count {
-            let lineText = lineTextArr[lineNum].stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+            let lineText = lineTextArr[lineNum].trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             for c in lineText.characters {
                 switch c {
                 case "{": closureCount += 1
@@ -134,16 +134,16 @@ internal func labelMaker(path path: String, line originalLine: Int, column: Int,
         }
     }
     parseLoop: for lineNum in line ..< lineTextArr.count {
-        let lineText = lineTextArr[lineNum].stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        let lineText = lineTextArr[lineNum].trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         
         switch foundStartOfCaseDecl {
         case false:
-            if lineText.rangeOfString("case")?.startIndex == lineText.startIndex {
+            if lineText.range(of: "case")?.lowerBound == lineText.startIndex {
                 caseDeclStartLine = lineNum
                 foundStartOfCaseDecl = true
             }
         case true:
-            if !(lineText.rangeOfString("case")?.startIndex == lineText.startIndex) {
+            if !(lineText.range(of: "case")?.lowerBound == lineText.startIndex) {
                 if checkLine(lineText) {
                     caseDeclEndLine = lineNum - 1
                     break parseLoop
@@ -152,9 +152,9 @@ internal func labelMaker(path path: String, line originalLine: Int, column: Int,
         }
     }
     let foo = Array(lineTextArr[caseDeclStartLine...caseDeclEndLine])
-        .map {$0.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())}
+        .map {$0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)}
         .filter {checkLine($0)}
-        .map {$0.componentsSeparatedByCharactersInSet(NSCharacterSet.alphanumericCharacterSet().invertedSet)[1]}
+        .map {$0.components(separatedBy: CharacterSet.alphanumerics.inverted)[1]}
     
     return foo
 }

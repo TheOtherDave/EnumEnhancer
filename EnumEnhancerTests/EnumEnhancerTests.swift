@@ -18,8 +18,8 @@ enum RawValueEnum : Int, EnumeratesCasesAndLabels {
     static let enhancer:EnumEnhancer<RawValueEnum> = EnhancedGenerator {
         // `$0` is a RawValueEnum?
         switch $0 {
-        case .None: $0 = .zero
-        case .Some(let theCase):
+        case .none: $0 = .zero
+        case .some(let theCase):
             switch theCase {
             case .zero: $0 = .one
             case .one: $0 = nil
@@ -55,8 +55,8 @@ enum AssociatedValueEnum<T: Initable> : EnumeratesCasesAndLabels, CustomStringCo
     static var enhancer: EnumEnhancer<AssociatedValueEnum<T>> {
         return EnhancedGenerator {
             switch $0 {
-            case .None: $0 = .one(T())
-            case .Some(let theCase):
+            case .none: $0 = .one(T())
+            case .some(let theCase):
                 switch theCase {
                 case .one: $0 = .two(T(), T())
                 case .two: $0 = nil
@@ -115,7 +115,7 @@ class EnumEnhancerTests: XCTestCase {
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
-        self.measureBlock {
+        self.measure {
             // Put the code you want to measure the time of here.
         }
     }
