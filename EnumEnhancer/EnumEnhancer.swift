@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// Conform to this protocol if don't want anything automatically generated.
+/// Conform to this protocol if you don't want anything automatically generated.
 public protocol EnhancedEnum {
     // These are all declared here instead of just in the protocol extension so that the compiler will grab any custom implementations.
     var label: String {get}
@@ -24,14 +24,14 @@ public protocol EnhancedEnumWithEnhancer : EnhancedEnum {
     /// Unless your enum is CustomStringConvertible, this is the only variable that you actually have to create yourself. With the exception of "self.label", everything else can be automatically generated through protocol extensions by conforming your type to 'EnumeratesCasesAndLabels'
     static var enhancer: EnumEnhancer<Self> {get}
 }
-/// Conform to this protocol if only want `Self.cases` to be automatically generated.
+/// Conform to this protocol if you only want `Self.cases` to be automatically generated.
 public protocol EnumeratesCases : EnhancedEnumWithEnhancer {}
 extension EnumeratesCases {
     /// An automatically generated array of all possible cases.
     public static var cases: [Self] { return Self.enhancer.cases }
 }
 
-/// Conform to this protocol if only want `Self.labels` and `self.labels` to be automatically generated.
+/// Conform to this protocol if you only want `Self.labels` and `self.labels` to be automatically generated.
 /// IMPORTANT!!! Note that conforming to CustomStringConvertible disables the mechanism used to automatically compute generate `self.label`. If your type conforms to CustomStringConvertible and you fail to provide your own implementation of `self.label`, this will return the wrong value. As soon as we can constrain types based on what they *don't* conform to, this will be moved there so that the compiler will let you know.
 public protocol EnumeratesLabels : EnhancedEnumWithEnhancer {}
 extension EnumeratesLabels {
