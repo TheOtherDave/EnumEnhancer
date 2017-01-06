@@ -11,7 +11,6 @@
 		CB098ED11C4F1EFF000E7CC2 /* EnumEnhancer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB098EC61C4F1EFF000E7CC2 /* EnumEnhancer.framework */; };
 		CB098ED61C4F1EFF000E7CC2 /* EnumEnhancerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB098ED51C4F1EFF000E7CC2 /* EnumEnhancerTests.swift */; };
 		CB098EE21C4F1F17000E7CC2 /* EnumEnhancer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB098EE01C4F1F17000E7CC2 /* EnumEnhancer.swift */; };
-		CB098EE31C4F1F17000E7CC2 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB098EE11C4F1F17000E7CC2 /* main.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,7 +31,6 @@
 		CB098ED51C4F1EFF000E7CC2 /* EnumEnhancerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumEnhancerTests.swift; sourceTree = "<group>"; };
 		CB098ED71C4F1EFF000E7CC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CB098EE01C4F1F17000E7CC2 /* EnumEnhancer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnumEnhancer.swift; sourceTree = "<group>"; };
-		CB098EE11C4F1F17000E7CC2 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,7 +74,6 @@
 			isa = PBXGroup;
 			children = (
 				CB098EE01C4F1F17000E7CC2 /* EnumEnhancer.swift */,
-				CB098EE11C4F1F17000E7CC2 /* main.swift */,
 				CB098EC91C4F1EFF000E7CC2 /* EnumEnhancer.h */,
 				CB098ECB1C4F1EFF000E7CC2 /* Info.plist */,
 			);
@@ -202,7 +199,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CB098EE31C4F1F17000E7CC2 /* main.swift in Sources */,
 				CB098EE21C4F1F17000E7CC2 /* EnumEnhancer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
