@@ -37,7 +37,7 @@ public protocol EnumeratesLabels : EnhancedEnumWithEnhancer {}
 extension EnumeratesLabels {
     /// An automatically generated array of all possible case labels.
     public static var labels: [String] { return Self.enhancer.labels }
-    // FIXME: Waiting on Swift to support "extension EnumeratesCasesAndLabels where !(Self: CustomStringConvertible) {}"
+    // TODO: Waiting on Swift to support "extension EnumeratesCasesAndLabels where !(Self: CustomStringConvertible) {}"
     /// IMPORTANT!!! Note that conforming to CustomStringConvertible disables the mechanism used to automatically compute this. If your type conforms to CustomStringConvertible and you fail to provide your own implementation, this will return the wrong value. As soon as we can constrain types based on what they *don't* conform to, this will be moved there so that the compiler will let you know.
     public var label: String {
         guard !(self is CustomStringConvertible) else {
