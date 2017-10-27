@@ -120,7 +120,7 @@ internal func labelMaker(path: String, line originalLine: Int, column: Int, skip
         var closureCount = 0
         closureLoop: for lineNum in ((line - 1 < 0) ? line : line - 1) ..< lineTextArr.count {
             let lineText = lineTextArr[lineNum].trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-            for c in lineText.characters {
+            for c in lineText {
                 switch c {
                 case "{": closureCount += 1
                 case "}": closureCount -= 1
