@@ -62,7 +62,7 @@ public protocol EnumeratesCasesAndLabels : EnumeratesCases, EnumeratesLabels {}
 open class EnumEnhancer <T: EnhancedEnum> {
     open var __CustomStringConvertibleErrorMessage__: String { return "<Error! Cannot automatically extract labels when self is CustomStringConvertible>" }
     public typealias EnhancedType = T
-    open let cases:    [T]
+    public let cases:    [T]
     open fileprivate (set) lazy var labels: [String] = { return self.cases.map { $0.label } }()
     internal init(_cases: [T]) {
         self.cases = _cases
