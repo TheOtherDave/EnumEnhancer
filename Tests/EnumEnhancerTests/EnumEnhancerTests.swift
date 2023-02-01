@@ -70,7 +70,7 @@ enum AssociatedValueEnum<T: Initable> : EnumeratesCasesAndLabels, CustomStringCo
     var description: String {
         switch self {
         case .one (let msg): return "\(msg)"
-        case .two (let msg): return "\(msg)"
+        case .two (let msg1, let msg2): return "\(msg1) \(msg2)"
         }
     }
     // Note that there is no custom `label` property even though there should be. The tests reflect that will return an error string.
