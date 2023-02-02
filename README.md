@@ -3,4 +3,4 @@ Note: This is mostly obselete with the introduction of [SE-0194](https://github.
 
 Someone on the swift-evolution list wanted a way to get an array containing the name (label) of every case in an enum, as well as an array of all possible cases. These classes and collection of three protocols (one for labels only, one for cases only, and one for both) does as much of the work for you as it can, and makes it a syntax error to not "fill in the blanks". Consult the comments in "EnumEnhancerTests.swift" for usage examples.
 
-The master branch has been converted to Swift 5.x syntax and is now presented as a Swift Package. In a move that will come as a complete surprise to everyone, the Swift-2.3 and Swift 3 branches still use their respective syntax and aren't packages because that was probably before packages existed. I think.
+The master branch has been converted to Swift 5.x syntax and is now presented as a Swift Package. In a move that will come as a complete surprise to everyone, the Swift-2.3 and Swift-3 branches still use their respective syntax and aren't packages because that was probably before packages existed. I think.
